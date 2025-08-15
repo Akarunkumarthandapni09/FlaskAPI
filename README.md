@@ -10,3 +10,4 @@ POST /predict
 curl -X POST https://your-app-name.azurewebsites.net/predict \
   -H "Content-Type: application/json" \
   -d '{"request_type": "Infra", "description": "Provision new production VM"}'
+
