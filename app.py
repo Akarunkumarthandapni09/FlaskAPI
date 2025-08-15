@@ -1,5 +1,6 @@
 # app.py
 import os
+import sys  # Import the sys module to get the traceback
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
@@ -7,8 +8,15 @@ import pandas as pd
 app = Flask(__name__)
 
 # Load trained model and label map
-model = joblib.load("approval_model.pkl")
-label_map = joblib.load("label_map.pkl")
+try:
+    model = joblib.load("approval_model.pkl")
+    label_map = joblib.load("label_map.pkl")
+except Exception as e:
+    app.logger.error("Error loading model files: %s", e)
+    # The following line will print the full Python traceback to the logs
+    app.logger.error("Traceback: %s", sys.exc_info())
+    # You might want to crash here so Gunicorn restarts
+    raise
 
 @app.route("/")
 def home():
@@ -31,6 +39,5 @@ def predict():
 
 
 if __name__ == "__main__":
-    # This is only used for local testing; Azure will use Gunicorn.
     port = int(os.environ.get("PORT", 8000))
     app.run(host="0.0.0.0", port=port)
