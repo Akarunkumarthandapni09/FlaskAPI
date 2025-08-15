@@ -1,4 +1,5 @@
 # app.py
+import os
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
@@ -28,6 +29,8 @@ def predict():
 
     return jsonify({"approval_flow": pred_flow})
 
-if __name__ == "__main__":
 
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == "__main__":
+    # This is only used for local testing; Azure will use Gunicorn.
+    port = int(os.environ.get("PORT", 8000))
+    app.run(host="0.0.0.0", port=port)
