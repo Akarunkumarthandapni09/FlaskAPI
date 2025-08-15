@@ -9,6 +9,10 @@ app = Flask(__name__)
 model = joblib.load("approval_model.pkl")
 label_map = joblib.load("label_map.pkl")
 
+@app.route("/")
+def home():
+    return "Service is running", 200
+
 @app.route("/predict", methods=["POST"])
 def predict():
     data = request.get_json(force=True)
@@ -25,4 +29,5 @@ def predict():
     return jsonify({"approval_flow": pred_flow})
 
 if __name__ == "__main__":
+
     app.run(host="0.0.0.0", port=5000)
