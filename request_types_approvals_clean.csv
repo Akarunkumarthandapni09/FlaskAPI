@@ -1,0 +1,101 @@
+request_type,description,approval_flow
+Infra,Provision new production VM for finance team,Project Manager -> Infra -> Security
+Infra,Replace physical server with cloud instance,Project Manager -> Infra
+Infra,Setup high-availability cluster for ERP,Project Manager -> Infra -> Security
+Infra,Migrate test servers to cloud,Project Manager -> Infra
+Infra,Deploy backup storage server,Project Manager -> Infra -> Security
+Infra,Install Kubernetes cluster for dev ops,Project Manager -> Infra
+Infra,Provision DR site server,Project Manager -> Infra -> Security
+Infra,Setup GPU-enabled compute node,Project Manager -> Infra
+Infra,Build internal file-sharing NAS,Project Manager -> Infra
+Infra,Create isolated environment for vendor testing,Project Manager -> Infra -> Security
+Security,Enable VPN access for external consultant,Project Manager -> Security
+Security,Setup MFA for high-privilege accounts,Project Manager -> Security -> CAB
+Security,Conduct penetration testing,Project Manager -> Security
+Security,Configure DLP for outgoing email,Project Manager -> Security
+Security,Implement zero-trust access policy,Project Manager -> Security -> CAB
+Security,Add IDS/IPS to branch office network,Project Manager -> Security
+Security,Enable hardware encryption on laptops,Project Manager -> Security
+Security,Setup biometric access control,Project Manager -> Security
+Security,Restrict access to HR systems,Project Manager -> Security
+Security,Enable geo-fencing for login attempts,Project Manager -> Security
+Database,Create schema for analytics dashboard,Project Manager -> DBA
+Database,Migrate DB to new data center,Project Manager -> DBA -> CAB
+Database,Setup read replicas for reporting,Project Manager -> DBA
+Database,Partition large customer table,Project Manager -> DBA
+Database,Enable point-in-time recovery,Project Manager -> DBA
+Database,Implement database encryption at rest,Project Manager -> DBA -> CAB
+Database,Upgrade DB engine version,Project Manager -> DBA
+Database,Move DB to managed cloud service,Project Manager -> DBA -> CAB
+Database,Optimize slow-running queries,Project Manager -> DBA
+Database,Archive old transactional data,Project Manager -> DBA
+App Feature,Add dark mode to mobile app,Project Manager -> QA
+App Feature,Implement export-to-PDF for compliance reports,Project Manager -> QA -> Security
+App Feature,Add AI-based search in app,Project Manager -> QA
+App Feature,Introduce offline mode,Project Manager -> QA
+App Feature,Integrate payment wallet option,Project Manager -> QA -> Security
+App Feature,Add accessibility features for visually impaired users,Project Manager -> QA
+App Feature,Implement 2FA for login,Project Manager -> QA -> Security
+App Feature,Add push notification scheduling,Project Manager -> QA
+App Feature,Create dynamic dashboard widgets,Project Manager -> QA
+App Feature,Introduce loyalty points system,Project Manager -> QA -> Security
+Integration,Connect CRM to ERP system,Project Manager -> Infra -> Security
+Integration,Setup API link with third-party logistics provider,Project Manager -> Infra -> Security
+Integration,Sync HRMS with payroll system,Project Manager -> Infra -> Security
+Integration,Integrate e-commerce site with payment processor,Project Manager -> Infra -> Security
+Integration,Link warehouse system to inventory app,Project Manager -> Infra -> Security
+Integration,Enable SSO with external partner portal,Project Manager -> Infra -> Security
+Integration,Build webhook integration for alerts,Project Manager -> Infra -> Security
+Integration,Connect BI tool to cloud databases,Project Manager -> Infra -> Security
+Integration,Setup API to retrieve weather data,Project Manager -> Infra -> Security
+Integration,Connect email system with CRM,Project Manager -> Infra -> Security
+Deployment,Deploy new release of web app,Project Manager -> DevOps
+Deployment,Push bug fix to production,Project Manager -> DevOps
+Deployment,Deploy internal HR portal update,Project Manager -> DevOps
+Deployment,Roll out new version of mobile app,Project Manager -> DevOps
+Deployment,Deploy AI chatbot to customer service site,Project Manager -> DevOps
+Deployment,Implement blue-green deployment for app,Project Manager -> DevOps
+Deployment,Deploy containerized application to production,Project Manager -> DevOps
+Deployment,Migrate deployment pipeline to new CI/CD tool,Project Manager -> DevOps
+Deployment,Deploy beta feature for selected users,Project Manager -> DevOps
+Deployment,Roll out performance monitoring tool,Project Manager -> DevOps
+Network,Setup new branch office VPN,Project Manager -> Infra -> Security
+Network,Upgrade firewall firmware,Project Manager -> Infra -> Security
+Network,Install new network switches,Project Manager -> Infra -> Security
+Network,Create VLAN for IoT devices,Project Manager -> Infra -> Security
+Network,Implement redundant internet connection,Project Manager -> Infra -> Security
+Network,Setup secure guest Wi-Fi,Project Manager -> Infra -> Security
+Network,Migrate network from IPv4 to IPv6,Project Manager -> Infra -> Security
+Network,Add QoS for video conferencing,Project Manager -> Infra -> Security
+Network,Extend wireless coverage in warehouse,Project Manager -> Infra -> Security
+Network,Replace network cables with fiber optics,Project Manager -> Infra -> Security
+User Access,Grant admin access to developer,Project Manager -> Security
+User Access,Remove access for resigned employee,Project Manager -> Security
+User Access,Grant read-only DB access to analyst,Project Manager -> Security
+User Access,Provide access to finance shared drive,Project Manager -> Security
+User Access,Enable remote desktop for engineer,Project Manager -> Security
+User Access,Restrict access to confidential documents,Project Manager -> Security
+User Access,Grant temporary access to vendor,Project Manager -> Security
+User Access,Assign project folder access to new team,Project Manager -> Security
+User Access,Create account for contractor,Project Manager -> Security
+User Access,Disable inactive user accounts,Project Manager -> Security
+Software Upgrade,Upgrade OS on production servers,Project Manager -> Infra/DevOps -> CAB
+Software Upgrade,Upgrade dev environment software,Project Manager -> Infra/DevOps
+Software Upgrade,Patch web server vulnerabilities,Project Manager -> Infra/DevOps
+Software Upgrade,Update antivirus definitions,Project Manager -> Infra/DevOps
+Software Upgrade,Upgrade messaging platform version,Project Manager -> Infra/DevOps
+Software Upgrade,Upgrade ERP to latest version,Project Manager -> Infra/DevOps -> CAB
+Software Upgrade,Apply firmware upgrade to storage array,Project Manager -> Infra/DevOps
+Software Upgrade,Upgrade project management tool,Project Manager -> Infra/DevOps
+Software Upgrade,Upgrade load balancer software,Project Manager -> Infra/DevOps
+Software Upgrade,Migrate to new database driver,Project Manager -> Infra/DevOps
+High-Risk,Migrate payment gateway,Project Manager -> Infra/Security -> CAB
+High-Risk,Enable open API to external partners,Project Manager -> Infra/Security -> CAB
+High-Risk,Deploy real-time fraud detection system,Project Manager -> Infra/Security -> CAB
+High-Risk,Open inbound firewall port to vendor,Project Manager -> Infra/Security -> CAB
+High-Risk,Launch machine learning model in production,Project Manager -> Infra/Security -> CAB
+High-Risk,Grant elevated access to third-party service,Project Manager -> Infra/Security -> CAB
+High-Risk,Enable blockchain-based transaction system,Project Manager -> Infra/Security -> CAB
+High-Risk,Setup public-facing SFTP server,Project Manager -> Infra/Security -> CAB
+High-Risk,Implement external customer identity federation,Project Manager -> Infra/Security -> CAB
+High-Risk,Allow cross-border data transfer,Project Manager -> Infra/Security -> CAB
