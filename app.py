@@ -1,18 +1,16 @@
-# app.py
 import os
 import sys
 import logging
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
+import traceback
 
 app = Flask(__name__)
-
-# Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Base directory for files
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Use persistent directory for Azure
+BASE_DIR = "/home/site/wwwroot"
 
 # Load trained model and label map
 try:
@@ -26,7 +24,7 @@ try:
     app.logger.info(f"Label map loaded from {label_map_path}")
 except Exception as e:
     app.logger.error("Error loading model files: %s", e)
-    app.logger.error("Traceback: %s", sys.exc_info())
+    app.logger.error("Traceback:\n%s", traceback.format_exc())
     raise
 
 @app.route("/")
@@ -36,28 +34,25 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        # Parse incoming JSON
-        data = request.get_json(force=True)
+        data = request.get_json()
+        if data is None:
+            return jsonify({"error": "Invalid JSON"}), 400
+
         req_type = data.get("request_type")
         desc = data.get("description")
-
         if not req_type or not desc:
             return jsonify({"error": "Both request_type and description are required"}), 400
 
-        # Prepare DataFrame for prediction
         df = pd.DataFrame([{"request_type": req_type, "description": desc}])
-        
-        # Make prediction
         pred_label = int(model.predict(df)[0])
         pred_flow = label_map.get(pred_label, "Unknown")
 
         app.logger.info(f"Prediction: {pred_flow} for input {data}")
-
         return jsonify({"approval_flow": pred_flow})
 
     except Exception as e:
         app.logger.error("Prediction error: %s", e)
-        app.logger.error("Traceback: %s", sys.exc_info())
+        app.logger.error("Traceback:\n%s", traceback.format_exc())
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
