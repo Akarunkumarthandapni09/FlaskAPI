@@ -10,11 +10,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write   # Required for Azure OIDC login
+      id-token: write
       contents: read
 
     steps:
-      # 1️⃣ Checkout the repository
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -30,7 +30,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 4️⃣ Login to Azure
+      # 4️⃣ Azure login
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -38,10 +38,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E8F0F13E72794357AE47A88EDD473097 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A31806BF85C44B3687AD170350FEEADB }}
 
-      # 5️⃣ Deploy app directly from repo root to Azure Web App
+      # 5️⃣ Deploy all files to Azure wwwroot
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'Approverapp'
           slot-name: 'Production'
-          package: '.'   # Deploy all files from repo root
+          package: '.'   # Deploy everything from repo root
