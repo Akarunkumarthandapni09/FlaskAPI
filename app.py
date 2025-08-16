@@ -1,21 +1,32 @@
 # app.py
 import os
-import sys  # Import the sys module to get the traceback
+import sys
+import logging
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
 
 app = Flask(__name__)
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+
+# Base directory for files
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
 # Load trained model and label map
 try:
-    model = joblib.load("approval_model.pkl")
-    label_map = joblib.load("label_map.pkl")
+    model_path = os.path.join(BASE_DIR, "approval_model.pkl")
+    label_map_path = os.path.join(BASE_DIR, "label_map.pkl")
+    
+    model = joblib.load(model_path)
+    label_map = joblib.load(label_map_path)
+    
+    app.logger.info(f"Model loaded from {model_path}")
+    app.logger.info(f"Label map loaded from {label_map_path}")
 except Exception as e:
     app.logger.error("Error loading model files: %s", e)
-    # The following line will print the full Python traceback to the logs
     app.logger.error("Traceback: %s", sys.exc_info())
-    # You might want to crash here so Gunicorn restarts
     raise
 
 @app.route("/")
@@ -24,19 +35,30 @@ def home():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    data = request.get_json(force=True)
-    req_type = data.get("request_type")
-    desc = data.get("description")
+    try:
+        # Parse incoming JSON
+        data = request.get_json(force=True)
+        req_type = data.get("request_type")
+        desc = data.get("description")
 
-    if not req_type or not desc:
-        return jsonify({"error": "Both request_type and description are required"}), 400
+        if not req_type or not desc:
+            return jsonify({"error": "Both request_type and description are required"}), 400
 
-    df = pd.DataFrame([{"request_type": req_type, "description": desc}])
-    pred_label = int(model.predict(df)[0])
-    pred_flow = label_map.get(pred_label, "Unknown")
+        # Prepare DataFrame for prediction
+        df = pd.DataFrame([{"request_type": req_type, "description": desc}])
+        
+        # Make prediction
+        pred_label = int(model.predict(df)[0])
+        pred_flow = label_map.get(pred_label, "Unknown")
 
-    return jsonify({"approval_flow": pred_flow})
+        app.logger.info(f"Prediction: {pred_flow} for input {data}")
 
+        return jsonify({"approval_flow": pred_flow})
+
+    except Exception as e:
+        app.logger.error("Prediction error: %s", e)
+        app.logger.error("Traceback: %s", sys.exc_info())
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
