@@ -9,8 +9,8 @@ import traceback
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
-# Use persistent directory for Azure
-BASE_DIR = "/home/site/wwwroot"
+# Use the current directory for model files (works even if Azure extracts to /tmp)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Load trained model and label map
 try:
@@ -34,7 +34,7 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
-        data = request.get_json()
+        data = request.get_json(force=True)
         if data is None:
             return jsonify({"error": "Invalid JSON"}), 400
 
