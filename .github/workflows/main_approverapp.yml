@@ -1,7 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
-
 name: Build and deploy Python app to Azure Web App - Approverapp
 
 on:
@@ -14,27 +10,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read #This is required for actions/checkout
+      contents: read  # Required for actions/checkout
 
     steps:
+      # 1️⃣ Checkout code
       - uses: actions/checkout@v4
 
-      - name: Set up Python version
+      # 2️⃣ Set up Python 3.11
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-      
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-        
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+      # 3️⃣ Cache pip packages
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
 
-      - name: Upload artifact for deployment jobs
+      # 4️⃣ Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # 5️⃣ Upload app files as artifact (excluding venv)
+      - name: Upload app files
         uses: actions/upload-artifact@v4
         with:
           name: python-app
@@ -46,26 +48,27 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write   # Required for Azure OIDC login
+      contents: read
 
     steps:
-      - name: Download artifact from build job
+      # 1️⃣ Download artifact from build job
+      - name: Download app artifact
         uses: actions/download-artifact@v4
         with:
           name: python-app
-      
-      - name: Login to Azure
+
+      # 2️⃣ Login to Azure
+      - name: Azure Login
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_501A5DAC4B5941378B75B234453568CD }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E8F0F13E72794357AE47A88EDD473097 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A31806BF85C44B3687AD170350FEEADB }}
 
-      - name: 'Deploy to Azure Web App'
+      # 3️⃣ Deploy to Azure Web App
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
         with:
           app-name: 'Approverapp'
           slot-name: 'Production'
-          
