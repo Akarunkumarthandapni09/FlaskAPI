@@ -1,4 +1,4 @@
-name: Build and deploy Python app to Azure Web App - Approverapp
+name: Deploy Flask App to Azure Web App - Approverapp
 
 on:
   push:
@@ -7,14 +7,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     permissions:
-      contents: read  # Required for actions/checkout
+      id-token: write   # Required for Azure OIDC login
+      contents: read
 
     steps:
-      # 1️⃣ Checkout code
-      - uses: actions/checkout@v4
+      # 1️⃣ Checkout code from repo
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       # 2️⃣ Set up Python 3.11
       - name: Set up Python
@@ -22,43 +24,13 @@ jobs:
         with:
           python-version: '3.11'
 
-      # 3️⃣ Cache pip packages
-      - name: Cache pip
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-
-      # 4️⃣ Install dependencies
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 5️⃣ Upload app files as artifact (excluding venv)
-      - name: Upload app files
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-app
-          path: |
-            .
-            !venv/
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write   # Required for Azure OIDC login
-      contents: read
-
-    steps:
-      # 1️⃣ Download artifact from build job
-      - name: Download app artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-
-      # 2️⃣ Login to Azure
+      # 4️⃣ Login to Azure using service principal
       - name: Azure Login
         uses: azure/login@v2
         with:
@@ -66,9 +38,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_E8F0F13E72794357AE47A88EDD473097 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_A31806BF85C44B3687AD170350FEEADB }}
 
-      # 3️⃣ Deploy to Azure Web App
+      # 5️⃣ Deploy app directly from repo root to Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'Approverapp'
           slot-name: 'Production'
+          package: '.'  # Deploy everything from repo root
